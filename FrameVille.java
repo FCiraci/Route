@@ -29,8 +29,8 @@ public class FrameVille extends JFrame
 
 		// Définition des composants
 		this.tabVilles = Ville.getVilles();
-		this.mainPanel = new JPanel( new GridLayout(1, 2));
-		this.panelTabVille = new JPanel(new GridLayout(1, 1));
+		this.mainPanel = new JPanel( new BorderLayout());
+		this.panelTabVille = new JPanel(new BorderLayout());
 		this.formulaire = new JPanel(new GridLayout(3, 2));
 
 		this.lblNom = new JLabel("nom : ");
@@ -59,7 +59,7 @@ public class FrameVille extends JFrame
 		this.panelTabVille.add(new JScrollPane(tblVilles), BorderLayout.CENTER);
         this.mainPanel.add(this.panelTabVille, BorderLayout.WEST);
         this.mainPanel.add(this.formulaire, BorderLayout.CENTER);
-		this.add(this.formulaire, BorderLayout.CENTER);
+		this.add(this.mainPanel, BorderLayout.CENTER);
 		this.add(this.btConfirmer, BorderLayout.SOUTH);
 
 		this.btConfirmer.addMouseListener(new MouseAdapter()

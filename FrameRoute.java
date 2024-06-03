@@ -19,7 +19,7 @@ public class FrameRoute extends JFrame implements ActionListener{
 
 	public FrameRoute()
 	{
-		this.setSize(400,200);
+		this.setSize(600,300);
 		this.setLocation(50,50);
 		this.setTitle("Nouvelle Route");
 		this.setLayout(new BorderLayout());
