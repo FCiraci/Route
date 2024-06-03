@@ -49,7 +49,7 @@ public class Controleur extends JFrame
 		{
 			public void mouseClicked(MouseEvent e)
 			{
-				new FrameRoute();
+				new FrameRoute(Controleur.this);
 			}
 		});
 
@@ -58,7 +58,7 @@ public class Controleur extends JFrame
 		{
 			public void mouseClicked(MouseEvent e)
 			{
-				new FrameVille();
+				new FrameVille(Controleur.this);
 			}
 		});
 
@@ -123,6 +123,11 @@ public class Controleur extends JFrame
         g.setColor(Color.BLACK);
         g.drawLine(route.getVilleDep().getAbscisse() + 25, route.getVilleDep().getOrdonnee() + 25,
                    route.getVilleArr().getAbscisse() + 25, route.getVilleArr().getOrdonnee() + 25);
+    }
+
+	public void rafraichirCarte()
+	{
+        panelCarte.repaint();
     }
 	public static void main(String[] args)
 	{

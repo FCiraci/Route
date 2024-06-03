@@ -17,9 +17,12 @@ public class FrameVille extends JFrame
     private Object[][] data;
 
 	private List<Ville> tabVilles;
+	private Controleur controleur;
 
-	public FrameVille()
+	public FrameVille(Controleur controleur)
 	{
+		this.controleur = controleur;
+
 		this.setSize(900, 300);
 		this.setLocation(50, 400);
 		this.setName("Nouvelle Ville");
@@ -68,24 +71,18 @@ public class FrameVille extends JFrame
             public void mouseClicked(MouseEvent e) 
 			{
                 String nom = txtNom.getText();
-                try 
+                int x = Integer.parseInt(txtAbscisse.getText());
+                int y = Integer.parseInt(txtOrdonnee.getText());
+                
+				if (!nom.isEmpty()) 
 				{
-                    int x = Integer.parseInt(txtAbscisse.getText());
-                    int y = Integer.parseInt(txtOrdonnee.getText());
-
-                    if (!nom.isEmpty()) 
+                    Ville ville = Ville.creerVille(nom, x, y);
+                    if (ville != null) 
 					{
-                        Ville ville = Ville.creerVille(nom, x, y);
-                        if (ville != null) 
-						{
-                            updateTable();
-                            dispose();
-                        }
+                      	updateTable();
+						controleur.rafraichirCarte();
+                        dispose();
                     }
-                }
-				catch (NumberFormatException ex) 
-				{
-                    JOptionPane.showMessageDialog(null, "Veuillez entrer des coordonnées valides.");
                 }
             }
         });
@@ -112,9 +109,4 @@ public class FrameVille extends JFrame
             panelTabVille.repaint();
         }
     }
-	public static void main(String[] args)
-	{
-		new FrameVille();
-	}
-	
 }

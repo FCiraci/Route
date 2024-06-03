@@ -18,9 +18,12 @@ public class FrameRoute extends JFrame implements ActionListener{
 
 
 	private List<Route> tabRoutes;
+    private Controleur controleur;
 
-	public FrameRoute()
+	public FrameRoute(Controleur controleur)
 	{
+        this.controleur = controleur;
+
 		this.setSize(800,300);
 		this.setLocation(50,50);
 		this.setTitle("Nouvelle Route");
@@ -98,13 +101,10 @@ public class FrameRoute extends JFrame implements ActionListener{
                 if (route != null)
                 {
                     updateTable();
+                    controleur.rafraichirCarte();
                     dispose();
                 }
             }
         }
     }
-
-	public static void main(String[] args) {
-		new FrameRoute();
-	}
-}	
+}
