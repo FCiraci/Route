@@ -13,13 +13,15 @@ public class FrameRoute extends JFrame implements ActionListener{
 	private JComboBox<Ville> ddlstVilleDepart, ddlstVilleArrive;
 	private JButton 	     btConfirmer;
 	private JTable		     tblRoutes;
-	private String[]         colNames = {"Ville Dep", "Ville Arr", "nb Tronçon"};
+	private String[]         nomCol = {"Ville Dep", "Ville Arr", "nb Tronçon"};
     private Object[][]       data;
 
 
+	private List<Route> tabRoutes;
+
 	public FrameRoute()
 	{
-		this.setSize(600,300);
+		this.setSize(800,300);
 		this.setLocation(50,50);
 		this.setTitle("Nouvelle Route");
 		this.setLayout(new BorderLayout());
@@ -27,6 +29,7 @@ public class FrameRoute extends JFrame implements ActionListener{
 
 		//ACTIVATION DES COMPOSANTS;
 
+        this.tabRoutes = Route.getRoutes();
 		this.pnlAjout = new JPanel(new GridLayout(3,2));
 		this.pnlTableau = new JPanel(new BorderLayout());
 		this.lblTroncon = new JLabel("Nombre de tronçon(s) :");
@@ -34,11 +37,9 @@ public class FrameRoute extends JFrame implements ActionListener{
 		this.lblVilleArrive = new JLabel("Ville d'arrivée");
 		this.txtTroncon = new JTextField(20);
 
-		List<Ville> villes = Ville.getVilles();
-		Ville[] villesArray = villes.toArray(new Ville[0]);
-		
-		this.ddlstVilleDepart = new JComboBox<>(villesArray);
-        this.ddlstVilleArrive = new JComboBox<>(villesArray);
+        this.ddlstVilleDepart = new JComboBox<>(Ville.getVilles().toArray(new Ville[0]));
+        this.ddlstVilleArrive = new JComboBox<>(Ville.getVilles().toArray(new Ville[0]));
+
         this.btConfirmer = new JButton("Confirmer");
         this.btConfirmer.addActionListener(this);
 
@@ -64,16 +65,15 @@ public class FrameRoute extends JFrame implements ActionListener{
 
     private void updateTable()
     {
-        List<Route> routes = Route.getRoutes();
-        data = new Object[routes.size()][3];
-        for (int i = 0; i < routes.size(); i++)
+        data = new Object[tabRoutes.size()][3];
+        for (int i = 0; i < tabRoutes.size(); i++)
         {
-            Route route = routes.get(i);
+            Route route = tabRoutes.get(i);
             data[i][0] = route.getVilleDep().getNom();
             data[i][1] = route.getVilleArr().getNom();
             data[i][2] = route.getNbTroncons();
         }
-        tblRoutes = new JTable(data, colNames);
+        tblRoutes = new JTable(data, nomCol);
         if (pnlTableau != null)
         {
             pnlTableau.removeAll();

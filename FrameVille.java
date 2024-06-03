@@ -13,14 +13,14 @@ public class FrameVille extends JFrame
 	private JPanel panelTabVille;
 	private JPanel mainPanel;
     private JTable tblVilles;
-	private String[] colNames = {"Numéro", "Nom", "x", "y"};
+	private String[] nomCol = {"Numéro", "Nom", "x", "y"};
     private Object[][] data;
 
 	private List<Ville> tabVilles;
 
 	public FrameVille()
 	{
-		this.setSize(300, 150);
+		this.setSize(900, 300);
 		this.setLocation(50, 400);
 		this.setName("Nouvelle Ville");
 		this.setLayout(new BorderLayout());
@@ -59,29 +59,36 @@ public class FrameVille extends JFrame
 		this.panelTabVille.add(new JScrollPane(tblVilles), BorderLayout.CENTER);
         this.mainPanel.add(this.panelTabVille, BorderLayout.WEST);
         this.mainPanel.add(this.formulaire, BorderLayout.CENTER);
+		
 		this.add(this.mainPanel, BorderLayout.CENTER);
 		this.add(this.btConfirmer, BorderLayout.SOUTH);
 
-		this.btConfirmer.addMouseListener(new MouseAdapter()
+		this.btConfirmer.addMouseListener(new MouseAdapter() 
 		{
-			public void mouseClicked(MouseEvent e) 
+            public void mouseClicked(MouseEvent e) 
 			{
-				String nom = txtNom.getText();
-				int x = Integer.parseInt(txtAbscisse.getText());
-				int y = Integer.parseInt(txtOrdonnee.getText());
-
-				if (!nom.isEmpty())
+                String nom = txtNom.getText();
+                try 
 				{
-					Ville ville = Ville.creerVille(nom, x, y);
-					if (ville != null)
+                    int x = Integer.parseInt(txtAbscisse.getText());
+                    int y = Integer.parseInt(txtOrdonnee.getText());
+
+                    if (!nom.isEmpty()) 
 					{
-						tabVilles.add(ville);
-						updateTable();
-						dispose();
-					}
-				}
-			}
-		});
+                        Ville ville = Ville.creerVille(nom, x, y);
+                        if (ville != null) 
+						{
+                            updateTable();
+                            dispose();
+                        }
+                    }
+                }
+				catch (NumberFormatException ex) 
+				{
+                    JOptionPane.showMessageDialog(null, "Veuillez entrer des coordonnées valides.");
+                }
+            }
+        });
 		this.setVisible(true);
 	}
 
@@ -96,7 +103,7 @@ public class FrameVille extends JFrame
             data[i][2] = ville.getAbscisse();
             data[i][3] = ville.getOrdonnee();
         }
-        tblVilles = new JTable(data, colNames);
+        tblVilles = new JTable(data, nomCol);
         if (panelTabVille != null)
 		{
             panelTabVille.removeAll();
