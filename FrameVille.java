@@ -1,10 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FrameVille extends JFrame
@@ -15,8 +12,11 @@ public class FrameVille extends JFrame
 	private JPanel formulaire;
 	private JPanel panelTabVille;
 	private JPanel mainPanel;
+    private JTable tblVilles;
+	private String[] colNames = {"Numéro", "Nom", "x", "y"};
+    private Object[][] data;
 
-	private List<Ville> tabVilles = new ArrayList<>();
+	private List<Ville> tabVilles;
 
 	public FrameVille()
 	{
@@ -24,22 +24,14 @@ public class FrameVille extends JFrame
 		this.setLocation(50, 400);
 		this.setName("Nouvelle Ville");
 		this.setLayout(new BorderLayout());
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 
 		// Définition des composants
-		this.mainPanel = new JPanel();
-		this.mainPanel.setLayout(new GridLayout(1, 2));
-
-		//Composants Tableau
-
-		this.panelTabVille = new JPanel();
-		this.panelTabVille.setLayout(new GridLayout(1, 1));
-
-		//Composants formulaire
-
-		this.formulaire = new JPanel();
-		this.formulaire.setLayout(new GridLayout(3, 2));
+		this.tabVilles = Ville.getVilles();
+		this.mainPanel = new JPanel( new GridLayout(1, 2));
+		this.panelTabVille = new JPanel(new GridLayout(1, 1));
+		this.formulaire = new JPanel(new GridLayout(3, 2));
 
 		this.lblNom = new JLabel("nom : ");
 		this.lblAbscisse = new JLabel("x : ");
@@ -62,6 +54,11 @@ public class FrameVille extends JFrame
 		this.formulaire.add(this.lblOrdonnee);
 		this.formulaire.add(this.txtOrdonnee);
 
+		this.updateTable();
+
+		this.panelTabVille.add(new JScrollPane(tblVilles), BorderLayout.CENTER);
+        this.mainPanel.add(this.panelTabVille, BorderLayout.WEST);
+        this.mainPanel.add(this.formulaire, BorderLayout.CENTER);
 		this.add(this.formulaire, BorderLayout.CENTER);
 		this.add(this.btConfirmer, BorderLayout.SOUTH);
 
@@ -73,12 +70,14 @@ public class FrameVille extends JFrame
 				int x = Integer.parseInt(txtAbscisse.getText());
 				int y = Integer.parseInt(txtOrdonnee.getText());
 
-				if (nom != "")
+				if (!nom.isEmpty())
 				{
 					Ville ville = Ville.creerVille(nom, x, y);
 					if (ville != null)
 					{
 						tabVilles.add(ville);
+						updateTable();
+						dispose();
 					}
 				}
 			}
@@ -86,6 +85,26 @@ public class FrameVille extends JFrame
 		this.setVisible(true);
 	}
 
+	private void updateTable()
+	{
+        data = new Object[tabVilles.size()][4];
+        for (int i = 0; i < tabVilles.size(); i++)
+		{
+            Ville ville = tabVilles.get(i);
+            data[i][0] = ville.getNumero();
+            data[i][1] = ville.getNom();
+            data[i][2] = ville.getAbscisse();
+            data[i][3] = ville.getOrdonnee();
+        }
+        tblVilles = new JTable(data, colNames);
+        if (panelTabVille != null)
+		{
+            panelTabVille.removeAll();
+            panelTabVille.add(new JScrollPane(tblVilles), BorderLayout.CENTER);
+            panelTabVille.revalidate();
+            panelTabVille.repaint();
+        }
+    }
 	public static void main(String[] args)
 	{
 		new FrameVille();

@@ -2,19 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 
 public class FrameRoute extends JFrame implements ActionListener{
 
-	private JPanel		pnlTableau, pnlAjout;
-	private JLabel 		lblTroncon, lblVilleDepart, lblVilleArrive;
-	private JTextField 	txtTroncon;
-	private String[] 	lstEntetes, lstVille;
-	private Object[][]	lstDonnee;
-	private JComboBox 	ddlstVilleDepart, ddlstVilleArrive;
-	private JButton 	btConfirmer;
-	private JTable		tblDonnee;
-
+	private JPanel		     pnlTableau, pnlAjout;
+	private JLabel 		     lblTroncon, lblVilleDepart, lblVilleArrive;
+	private JTextField 	     txtTroncon;
+	private JComboBox<Ville> ddlstVilleDepart, ddlstVilleArrive;
+	private JButton 	     btConfirmer;
+	private JTable		     tblRoutes;
+	private String[]         colNames = {"Ville Dep", "Ville Arr", "nb Tronçon"};
+    private Object[][]       data;
 
 
 	public FrameRoute()
@@ -23,29 +23,24 @@ public class FrameRoute extends JFrame implements ActionListener{
 		this.setLocation(50,50);
 		this.setTitle("Nouvelle Route");
 		this.setLayout(new BorderLayout());
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		//ACTIVATION DES COMPOSANTS;
 
-		this.pnlAjout = new JPanel();
-		this.pnlAjout.setLayout(new GridLayout(3,2));
-		this.pnlTableau = new JPanel();
-		this.pnlTableau.setLayout(new BorderLayout());
+		this.pnlAjout = new JPanel(new GridLayout(3,2));
+		this.pnlTableau = new JPanel(new BorderLayout());
 		this.lblTroncon = new JLabel("Nombre de tronçon(s) :");
 		this.lblVilleDepart = new JLabel("Ville de départ");
 		this.lblVilleArrive = new JLabel("Ville d'arrivée");
 		this.txtTroncon = new JTextField(20);
-		
-		this.ddlstVilleDepart = new JComboBox<Object>(this.lstVille);
-		this.ddlstVilleArrive = new JComboBox<Object>(this.lstVille);
-		this.btConfirmer = new JButton("Confirmer");
-		this.btConfirmer.addActionListener(this);
-		this.lstEntetes = new String[]{"Ville Dep", "Ville Arr", "nb Tronçon"};
-		this.lstVille = new String[]{"Choissez une ville","Lyon", "Paris", "Marseille"};
-		this.lstDonnee = new Object[][]{{}};
-		
-		
 
+		List<Ville> villes = Ville.getVilles();
+		Ville[] villesArray = villes.toArray(new Ville[0]);
+		
+		this.ddlstVilleDepart = new JComboBox<>(villesArray);
+        this.ddlstVilleArrive = new JComboBox<>(villesArray);
+        this.btConfirmer = new JButton("Confirmer");
+        this.btConfirmer.addActionListener(this);
 
 		//PLACEMENT DES COMPOSANTS
 
@@ -55,39 +50,59 @@ public class FrameRoute extends JFrame implements ActionListener{
 		this.pnlAjout.add(this.ddlstVilleDepart);
 		this.pnlAjout.add(this.lblVilleArrive);
 		this.pnlAjout.add(this.ddlstVilleArrive);
-		this.pnlTableau.add(this.tblDonnee);
 
+        this.updateTable();
 
-		this.add(this.pnlTableau);
-		this.add(this.pnlAjout, BorderLayout.CENTER);
-		this.add(this.btConfirmer, BorderLayout.SOUTH);
+		this.pnlTableau.add(new JScrollPane(tblRoutes), BorderLayout.CENTER);
+        this.add(this.pnlTableau, BorderLayout.WEST);
+        this.add(this.pnlAjout, BorderLayout.CENTER);
+        this.add(this.btConfirmer, BorderLayout.SOUTH);
 
 		this.setVisible(true);
 
 	}
 
+    private void updateTable()
+    {
+        List<Route> routes = Route.getRoutes();
+        data = new Object[routes.size()][3];
+        for (int i = 0; i < routes.size(); i++)
+        {
+            Route route = routes.get(i);
+            data[i][0] = route.getVilleDep().getNom();
+            data[i][1] = route.getVilleArr().getNom();
+            data[i][2] = route.getNbTroncons();
+        }
+        tblRoutes = new JTable(data, colNames);
+        if (pnlTableau != null)
+        {
+            pnlTableau.removeAll();
+            pnlTableau.add(new JScrollPane(tblRoutes), BorderLayout.CENTER);
+            pnlTableau.revalidate();
+            pnlTableau.repaint();
+        }
+    }
+
 	public void actionPerformed(ActionEvent e)
-	{
-		String action = e.getActionCommand(); 
-		String villeDep, villeArr, nbTroncon;
-
-		if(action.equals("Confirmer"))
-		{
-			villeDep 	= (String)this.ddlstVilleArrive.getSelectedItem();
-			villeArr 	= (String)this.ddlstVilleDepart.getSelectedItem();
-			nbTroncon 	= this.txtTroncon.getText();
-			Object[] donnee = {villeDep, villeArr, nbTroncon};
-			for(int i = 0; i < this.lstDonnee.length; i++)
-			{
-				for(int j = 0; j < this.lstDonnee[i].length; j++)
-				{
-					this.lstDonnee[i] = donnee;
-				}
-			}
-		}
-		this.tblDonnee = new JTable(this.lstDonnee, this.lstEntetes);
-
-	}
+    {
+        String action = e.getActionCommand();
+        if (action.equals("Confirmer"))
+        {
+            Ville villeDep = (Ville) this.ddlstVilleDepart.getSelectedItem();
+            Ville villeArr = (Ville) this.ddlstVilleArrive.getSelectedItem();
+            int nbTroncon = Integer.parseInt(this.txtTroncon.getText());
+            
+            if (villeDep != null && villeArr != null && villeDep != villeArr)
+            {
+                Route route = Route.ajouterRoute(nbTroncon, villeDep, villeArr);
+                if (route != null)
+                {
+                    updateTable();
+                    dispose();
+                }
+            }
+        }
+    }
 
 	public static void main(String[] args) {
 		new FrameRoute();

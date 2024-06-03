@@ -5,6 +5,8 @@ import java.awt.event.MouseEvent;
 
 public class Controleur extends JFrame
 {
+	private JPanel panelCarte;
+
 	public Controleur()
 	{
 		JFrame    frame       = new JFrame("Controleur");
@@ -84,27 +86,44 @@ public class Controleur extends JFrame
 
 	private JPanel panelCarte()
 	{
-		JPanel carte = new JPanel();
-
-		return carte;
+		panelCarte = new JPanel() 
+		{
+            protected void paintComponent(Graphics g) 
+			{
+                super.paintComponent(g);
+                dessinerVillesEtRoutes(g);
+            }
+        };
+        return panelCarte;
 	}
+
+	private void dessinerVillesEtRoutes(Graphics g)
+    {
+        for (Ville ville : Ville.getVilles())
+        {
+            dessinerVille(g, ville);
+        }
+
+        for (Route route : Route.getRoutes())
+        {
+            dessinerRoute(g, route);
+        }
+    }
 	
-	public void dessinerVille(Graphics g, Ville ville)
-	{
-		super.paint(g);
-		g.setColor(Color.BLUE);
-		g.fillOval(ville.getAbscisse(), ville.getOrdonnee(), 50, 50);
-	}
+	private void dessinerVille(Graphics g, Ville ville)
+    {
+        g.setColor(Color.BLUE);
+        g.fillOval(ville.getAbscisse(), ville.getOrdonnee(), 50, 50);
+        g.setColor(Color.WHITE);
+        g.drawString(ville.toString(), ville.getAbscisse() + 5, ville.getOrdonnee() + 25);
+    }
 
-	public void dessinerRoute(Graphics g, Route route)
-	{
-		super.paint(g);
-		
-		g.setColor(Color.BLACK);
-
-		g.drawLine(route.getVilleDep().getAbscisse(), route.getVilleDep().getOrdonnee(), route.getVilleArr().getAbscisse(), route.getVilleArr().getOrdonnee());
-	}
-
+	private void dessinerRoute(Graphics g, Route route)
+    {
+        g.setColor(Color.BLACK);
+        g.drawLine(route.getVilleDep().getAbscisse() + 25, route.getVilleDep().getOrdonnee() + 25,
+                   route.getVilleArr().getAbscisse() + 25, route.getVilleArr().getOrdonnee() + 25);
+    }
 	public static void main(String[] args)
 	{
 		new Controleur();
