@@ -5,11 +5,12 @@ public class Ville
 {
 	private static int nbVilles = 0;
 	
-	private int    numero   ;
-	private String nom      ;
-	private int    x        ;
-	private int    y        ;
-	private List   routesAdj;
+	private int    numero;
+	private String nom   ;
+	private int    x     ;
+	private int    y     ;
+
+	private List<Route> routesAdj;
 
 
 	public static Ville creerVille(String nom, int x,  int y)
@@ -32,7 +33,7 @@ public class Ville
 		this.nom    = nom;
 		this.x      = x;
 		this.y      = y;
-		this.routesAdj = new ArrayList<Ville>();
+		this.routesAdj = new ArrayList<>();
 	}
 
 	public String toString()

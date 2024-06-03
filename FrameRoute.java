@@ -55,7 +55,10 @@ public class FrameRoute extends JFrame implements ActionListener{
 		this.pnlAjout.add(this.ddlstVilleDepart);
 		this.pnlAjout.add(this.lblVilleArrive);
 		this.pnlAjout.add(this.ddlstVilleArrive);
+		this.pnlTableau.add(this.tblDonnee);
 
+
+		this.add(this.pnlTableau);
 		this.add(this.pnlAjout, BorderLayout.CENTER);
 		this.add(this.btConfirmer, BorderLayout.SOUTH);
 
@@ -66,14 +69,24 @@ public class FrameRoute extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e)
 	{
 		String action = e.getActionCommand(); 
-		Object[] donnee = new Object[]{};
-		int i = 0;
 		String villeDep, villeArr, nbTroncon;
 
 		if(action.equals("Confirmer"))
 		{
-			villeDep = (String)
+			villeDep 	= (String)this.ddlstVilleArrive.getSelectedItem();
+			villeArr 	= (String)this.ddlstVilleDepart.getSelectedItem();
+			nbTroncon 	= this.txtTroncon.getText();
+			Object[] donnee = {villeDep, villeArr, nbTroncon};
+			for(int i = 0; i < this.lstDonnee.length; i++)
+			{
+				for(int j = 0; j < this.lstDonnee[i].length; j++)
+				{
+					this.lstDonnee[i] = donnee;
+				}
+			}
 		}
+		this.tblDonnee = new JTable(this.lstDonnee, this.lstEntetes);
+
 	}
 
 	public static void main(String[] args) {

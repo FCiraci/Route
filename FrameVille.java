@@ -16,7 +16,7 @@ public class FrameVille extends JFrame
 	private JPanel panelTabVille;
 	private JPanel mainPanel;
 
-	private List<List<Object>> tabVilles = new ArrayList<>();
+	private List<Ville> tabVilles = new ArrayList<>();
 
 	public FrameVille()
 	{
@@ -35,25 +35,6 @@ public class FrameVille extends JFrame
 
 		this.panelTabVille = new JPanel();
 		this.panelTabVille.setLayout(new GridLayout(1, 1));
-
-		/*String[] columnNames = {"Numéro", "Nom", "X", "Y"};
-		Object[][] data = new Object[this.tabVilles.size()][4];
-
-		for (Ville villes : v)
-		{
-			List<Object> joueurInfo = new ArrayList<>();
-			joueurInfo.add(joueur.getNom());
-			joueurInfo.add(joueur.getScore());
-			tabScore.add(joueurInfo);
-		}
-
-		for (int i = 0; i < this.tabVilles.size(); i++) 
-		{
-			data[i][0] = this.tabVilles.get(i).get(0); 
-			data[i][1] = this.tabVilles.get(i).get(1);
-			data[i][2] = jeu.getJoueurs().get(i) == jeu.getJoueurActif() ? "Oui" : "Non";
-		}*/
-
 
 		//Composants formulaire
 
@@ -95,7 +76,10 @@ public class FrameVille extends JFrame
 				if (nom != "")
 				{
 					Ville ville = Ville.creerVille(nom, x, y);
-					//this.tabVilles.add(ville);
+					if (ville != null)
+					{
+						tabVilles.add(ville);
+					}
 				}
 			}
 		});
