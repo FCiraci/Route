@@ -88,9 +88,27 @@ public class Controleur extends JFrame
 
 		return carte;
 	}
+	
+	public void dessinerVille(Graphics g, Ville ville)
+	{
+		super.paint(g);
+		g.setColor(Color.BLUE);
+		g.fillOval(ville.getAbscisse(), ville.getOrdonnee(), 50, 50);
+	}
+
+	public void dessinerRoute(Graphics g, Route route)
+	{
+		super.paint(g);
+		
+		g.setColor(Color.BLACK);
+
+		g.drawLine(route.getVilleDep().getAbscisse(), route.getVilleDep().getOrdonnee(), route.getVilleArr().getAbscisse(), route.getVilleArr().getOrdonnee());
+	}
 
 	public static void main(String[] args)
 	{
 		new Controleur();
 	}
+
+	
 }

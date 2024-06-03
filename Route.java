@@ -1,10 +1,10 @@
 public class Route
 {
 	private int    nbTroncons;
-	private String villeDep  ;
-	private String villeArr  ;
+	private Ville villeDep  ;
+	private Ville villeArr  ;
 
-	public Route ajouterRoute(int nbTroncons, String villeDep,  String villeArr)
+	public Route ajouterRoute(int nbTroncons, Ville villeDep,  Ville villeArr)
 	{
 		if (nbTroncons >= 0 && nbTroncons <= 10)
 		{
@@ -18,12 +18,18 @@ public class Route
 
 	}
 
-	private Route(int nbTroncons, String villeDep,  String villeArr)
+	private Route(int nbTroncons, Ville villeDep,  Ville villeArr)
 	{
 		this.nbTroncons = nbTroncons;
 		this.villeDep   = villeDep;
 		this.villeArr   = villeArr;
 	}
+
+	public Ville getVilleDep() { return this.villeDep; }
+
+	public Ville getVilleArr() { return this.villeArr; }
+
+	public int getNbTroncons() { return this.nbTroncons; }
 
 	public String toString()
 	{

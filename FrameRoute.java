@@ -1,14 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class FrameRoute extends JFrame{
+
+public class FrameRoute extends JFrame implements ActionListener{
 
 	private JPanel		pnlTableau, pnlAjout;
 	private JLabel 		lblTroncon, lblVilleDepart, lblVilleArrive;
 	private JTextField 	txtTroncon;
-	private String[] 	lstVille;
+	private String[] 	lstEntetes, lstVille;
+	private Object[][]	lstDonnee;
 	private JComboBox 	ddlstVilleDepart, ddlstVilleArrive;
 	private JButton 	btConfirmer;
+	private JTable		tblDonnee;
+
 
 
 	public FrameRoute()
@@ -23,15 +29,23 @@ public class FrameRoute extends JFrame{
 
 		this.pnlAjout = new JPanel();
 		this.pnlAjout.setLayout(new GridLayout(3,2));
-
+		this.pnlTableau = new JPanel();
+		this.pnlTableau.setLayout(new BorderLayout());
 		this.lblTroncon = new JLabel("Nombre de tronçon(s) :");
 		this.lblVilleDepart = new JLabel("Ville de départ");
 		this.lblVilleArrive = new JLabel("Ville d'arrivée");
 		this.txtTroncon = new JTextField(20);
-		this.lstVille = new String[]{"Choissez une ville","Lyon", "Paris", "Marseille"};
-		this.ddlstVilleDepart = new JComboBox<String>(this.lstVille);
-		this.ddlstVilleArrive = new JComboBox<String>(this.lstVille);
+		
+		this.ddlstVilleDepart = new JComboBox<Object>(this.lstVille);
+		this.ddlstVilleArrive = new JComboBox<Object>(this.lstVille);
 		this.btConfirmer = new JButton("Confirmer");
+		this.btConfirmer.addActionListener(this);
+		this.lstEntetes = new String[]{"Ville Dep", "Ville Arr", "nb Tronçon"};
+		this.lstVille = new String[]{"Choissez une ville","Lyon", "Paris", "Marseille"};
+		this.lstDonnee = new Object[][]{{}};
+		
+		
+
 
 		//PLACEMENT DES COMPOSANTS
 
@@ -47,6 +61,19 @@ public class FrameRoute extends JFrame{
 
 		this.setVisible(true);
 
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		String action = e.getActionCommand(); 
+		Object[] donnee = new Object[]{};
+		int i = 0;
+		String villeDep, villeArr, nbTroncon;
+
+		if(action.equals("Confirmer"))
+		{
+			villeDep = (String)
+		}
 	}
 
 	public static void main(String[] args) {
