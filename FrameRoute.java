@@ -31,21 +31,22 @@ public class FrameRoute extends JFrame implements ActionListener
 
 		//ACTIVATION DES COMPOSANTS;
 
-		this.tabRoutes = Route.getRoutes();
-		this.pnlDroit = new JPanel(new BorderLayout());
-		this.pnlAjout = new JPanel(new GridLayout(3,2));
+		this.tabRoutes  = Route.getRoutes();
+		this.pnlDroit   = new JPanel(new BorderLayout());
+		this.pnlAjout   = new JPanel(new GridLayout(3,2));
 		this.pnlTableau = new JPanel(new BorderLayout());
 
-		this.lblTroncon = new JLabel("Nombre de tronçon(s) :");
-		this.lblVilleDepart = new JLabel("Ville de départ");
-		this.lblVilleArrive = new JLabel("Ville d'arrivée");
+		this.lblTroncon     = new JLabel("Nombre de tronçon(s) :");
+		this.lblVilleDepart = new JLabel("Ville de départ : "    );
+		this.lblVilleArrive = new JLabel("Ville d'arrivée : "    );
 
-		this.txtTroncon = new JTextField(20);
+		this.txtTroncon       = new JTextField(20);
 		this.ddlstVilleDepart = new JComboBox<>(Ville.getVilles().toArray(new Ville[0]));
 		this.ddlstVilleArrive = new JComboBox<>(Ville.getVilles().toArray(new Ville[0]));
 
 		this.btConfirmer = new JButton("Confirmer");
 		this.btConfirmer.addActionListener(this);
+		
 		this.btModifier = new JButton("Modifier");
 		this.btModifier.addActionListener(this);
 

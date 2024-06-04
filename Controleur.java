@@ -9,7 +9,7 @@ public class Controleur extends JFrame
 
 	public Controleur()
 	{
-		JFrame	frame	   		= new JFrame("Controleur");
+		JFrame	frame	   	  = new JFrame("Controleur");
 		Dimension tailleEcran = Toolkit.getDefaultToolkit().getScreenSize();
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

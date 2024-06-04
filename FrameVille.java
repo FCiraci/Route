@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class FrameVille extends JFrame
+public class FrameVille extends JFrame implements ActionListener
 {
-	private JPanel     pnlAjout, pnlTableau, mainPanel, pnlDroit;
+	private JPanel     pnlAjout, pnlTableau, pnlDroit;
 	private JLabel     lblNom, lblAbscisse, lblOrdonnee;
 	private JTextField txtNom, txtAbscisse, txtOrdonnee;
 	private JButton    btConfirmer, btModifier;
@@ -28,21 +28,22 @@ public class FrameVille extends JFrame
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		// Définition des composants
-		this.tabVilles = Ville.getVilles();
-		this.pnlDroit = new JPanel(new BorderLayout());
+		this.tabVilles  = Ville.getVilles();
+		this.pnlDroit   = new JPanel(new BorderLayout());
 		this.pnlTableau = new JPanel(new BorderLayout());
-		this.pnlAjout = new JPanel(new GridLayout(3, 2));
+		this.pnlAjout   = new JPanel(new GridLayout(3, 2));
 
-		this.lblNom = new JLabel("nom : ");
-		this.lblAbscisse = new JLabel("x : ");
-		this.lblOrdonnee = new JLabel("y : ");
+		this.lblNom      = new JLabel("nom : ");
+		this.lblAbscisse = new JLabel("x : "  );
+		this.lblOrdonnee = new JLabel("y : "  );
 
-		this.txtNom = new JTextField(50);
-		this.txtAbscisse = new JTextField(5);
-		this.txtOrdonnee = new JTextField(5);
+		this.txtNom      = new JTextField(50);
+		this.txtAbscisse = new JTextField(5 );
+		this.txtOrdonnee = new JTextField(5 );
 
 		this.btConfirmer = new JButton("Confirmer");
 		this.btConfirmer.addActionListener(this);
+
 		this.btModifier = new JButton("Modifier");
 		this.btModifier.addActionListener(this);
 
