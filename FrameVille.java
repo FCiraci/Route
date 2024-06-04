@@ -1,20 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class FrameVille extends JFrame
 {
-	private JLabel lblNom, lblAbscisse, lblOrdonnee;
+	private JPanel     pnlAjout, pnlTableau, mainPanel, pnlDroit;
+	private JLabel     lblNom, lblAbscisse, lblOrdonnee;
 	private JTextField txtNom, txtAbscisse, txtOrdonnee;
-	private JButton btConfirmer;
-	private JPanel formulaire;
-	private JPanel panelTabVille;
-	private JPanel mainPanel;
-    private JTable tblVilles;
-	private String[] nomCol = {"Numéro", "Nom", "x", "y"};
-    private Object[][] data;
+	private JButton    btConfirmer, btModifier;
+	private JTable     tblVilles;
+	private String[]   nomCol = {"Numéro", "Nom", "x", "y"};
+	private Object[][] data;
 
 	private List<Ville> tabVilles;
 	private Controleur controleur;
@@ -29,12 +27,11 @@ public class FrameVille extends JFrame
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
-
 		// Définition des composants
 		this.tabVilles = Ville.getVilles();
-		this.mainPanel = new JPanel( new BorderLayout());
-		this.panelTabVille = new JPanel(new BorderLayout());
-		this.formulaire = new JPanel(new GridLayout(3, 2));
+		this.pnlDroit = new JPanel(new BorderLayout());
+		this.pnlTableau = new JPanel(new BorderLayout());
+		this.pnlAjout = new JPanel(new GridLayout(3, 2));
 
 		this.lblNom = new JLabel("nom : ");
 		this.lblAbscisse = new JLabel("x : ");
@@ -45,68 +42,76 @@ public class FrameVille extends JFrame
 		this.txtOrdonnee = new JTextField(5);
 
 		this.btConfirmer = new JButton("Confirmer");
+		this.btConfirmer.addActionListener(this);
+		this.btModifier = new JButton("Modifier");
+		this.btModifier.addActionListener(this);
 
 		// Ajout des composants
 
-		this.formulaire.add(this.lblNom);
-		this.formulaire.add(this.txtNom);
+		this.pnlAjout.add(this.lblNom);
+		this.pnlAjout.add(this.txtNom);
 
-		this.formulaire.add(this.lblAbscisse);
-		this.formulaire.add(this.txtAbscisse);
+		this.pnlAjout.add(this.lblAbscisse);
+		this.pnlAjout.add(this.txtAbscisse);
 
-		this.formulaire.add(this.lblOrdonnee);
-		this.formulaire.add(this.txtOrdonnee);
+		this.pnlAjout.add(this.lblOrdonnee);
+		this.pnlAjout.add(this.txtOrdonnee);
 
 		this.updateTable();
 
-		this.panelTabVille.add(new JScrollPane(tblVilles), BorderLayout.CENTER);
-        this.mainPanel.add(this.panelTabVille, BorderLayout.WEST);
-        this.mainPanel.add(this.formulaire, BorderLayout.CENTER);
-		
-		this.add(this.mainPanel, BorderLayout.CENTER);
-		this.add(this.btConfirmer, BorderLayout.SOUTH);
+		this.pnlTableau.add(new JScrollPane(tblVilles), BorderLayout.CENTER);
+		this.pnlTableau.add(this.btModifier, BorderLayout.SOUTH);
 
-		this.btConfirmer.addMouseListener(new MouseAdapter() 
-		{
-            public void mouseClicked(MouseEvent e) 
-			{
-                String nom = txtNom.getText();
-                int x = Integer.parseInt(txtAbscisse.getText());
-                int y = Integer.parseInt(txtOrdonnee.getText());
-                
-				if (!nom.isEmpty()) 
-				{
-                    Ville ville = Ville.creerVille(nom, x, y);
-                    if (ville != null) 
-					{
-                      	updateTable();
-						controleur.rafraichirCarte();
-                        dispose();
-                    }
-                }
-            }
-        });
+		this.add(this.pnlTableau, BorderLayout.WEST);
+
+		this.pnlDroit.add(this.pnlAjout, BorderLayout.CENTER);
+		this.pnlDroit.add(this.btConfirmer, BorderLayout.SOUTH);
+
+		this.add(this.pnlDroit, BorderLayout.CENTER);
+		
 		this.setVisible(true);
 	}
 
 	private void updateTable()
 	{
-        data = new Object[tabVilles.size()][4];
-        for (int i = 0; i < tabVilles.size(); i++)
+		data = new Object[this.tabVilles.size()][4];
+		for (int i = 0; i < this.tabVilles.size(); i++)
 		{
-            Ville ville = tabVilles.get(i);
-            data[i][0] = ville.getNumero();
-            data[i][1] = ville.getNom();
-            data[i][2] = ville.getAbscisse();
-            data[i][3] = ville.getOrdonnee();
-        }
-        tblVilles = new JTable(data, nomCol);
-        if (panelTabVille != null)
+			Ville ville = this.tabVilles.get(i);
+			data[i][0] = ville.getNumero();
+			data[i][1] = ville.getNom();
+			data[i][2] = ville.getAbscisse();
+			data[i][3] = ville.getOrdonnee();
+		}
+		tblVilles = new JTable(data, nomCol);
+		if (this.pnlTableau != null)
 		{
-            panelTabVille.removeAll();
-            panelTabVille.add(new JScrollPane(tblVilles), BorderLayout.CENTER);
-            panelTabVille.revalidate();
-            panelTabVille.repaint();
-        }
-    }
+			this.pnlTableau.removeAll();
+			this.pnlTableau.add(new JScrollPane(this.tblVilles), BorderLayout.CENTER);
+			this.pnlTableau.revalidate();
+			this.pnlTableau.repaint();
+		}
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		String action = e.getActionCommand();
+		if (action.equals("Confirmer"))
+		{
+			String nom = this.txtNom.getText();
+			int x = Integer.parseInt(this.txtAbscisse.getText());
+			int y = Integer.parseInt(this.txtOrdonnee.getText());
+			
+			if (!nom.isEmpty()) 
+			{
+				Ville ville = Ville.creerVille(nom, x, y);
+				if (ville != null) 
+				{
+					updateTable();
+					this.controleur.rafraichirCarte();
+					dispose();
+				}
+			}
+		}
+	}
 }
