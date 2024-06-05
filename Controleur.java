@@ -10,6 +10,8 @@ public class Controleur extends JFrame
 	private Ville  selectedVille = null;
     private int    offsetX, offsetY;
 
+	private JLabel infosVille = new JLabel("");
+
 	public Controleur()
 	{
 		JFrame	frame	   	  = new JFrame("Controleur");
@@ -74,7 +76,8 @@ public class Controleur extends JFrame
 		importer.setForeground(Color.WHITE);
 		importer.setPreferredSize(tailleBouton);
 
-		importer.addMouseListener(new MouseAdapter() {
+		importer.addMouseListener(new MouseAdapter()
+		{
 			public void mouseClicked(MouseEvent e)
 			{
 				JFileChooser ouvrirFichier = new JFileChooser("./Route");
@@ -85,12 +88,12 @@ public class Controleur extends JFrame
 			}
 		});
 
-		boutons.setLayout(new FlowLayout());
+		boutons.setLayout(new GridLayout(5, 1));
 		boutons.add(ajtVille);
 		boutons.add(ajtRoute);
 		boutons.add(importer);
 		boutons.add(exporter);
-
+		boutons.add(infosVille);
 
 		menu.setLayout(new GridLayout(2, 1));
 		menu.add(boutons);
@@ -114,20 +117,27 @@ public class Controleur extends JFrame
 		{
             public void mousePressed(MouseEvent e)
 			{
-                for (Ville ville : Ville.getVilles())
+				for (Ville ville : Ville.getVilles()) 
 				{
-                    int x = ville.getAbscisse();
-                    int y = ville.getOrdonnee();
-                    if (e.getX() >= x && e.getX() <= x + 50 && e.getY() >= y && e.getY() <= y + 50) 
-					{
-                        selectedVille = ville;
-                        offsetX = e.getX() - x;
-                        offsetY = e.getY() - y;
-                        break;
-                    }
-                }
-            }
+					int x = ville.getAbscisse();
+					int y = ville.getOrdonnee();
 
+					if (e.getX() >= x && e.getX() <= x + 50 && e.getY() >= y && e.getY() <= y + 50)
+					{
+						selectedVille = ville;
+						offsetX = e.getX() - x;
+						offsetY = e.getY() - y;
+						
+						String infoText = "Nom: " + ville.getNom() + ", X: " + ville.getAbscisse() + ", Y: " + ville.getOrdonnee();
+						infosVille.setText(infoText);
+						
+						infosVille.revalidate();
+						infosVille.repaint();
+						
+						break;
+					}
+				}
+			}
             public void mouseReleased(MouseEvent e)
 			{
                 selectedVille = null;

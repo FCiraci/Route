@@ -89,6 +89,7 @@ public class FrameVille extends JFrame implements ActionListener
 		{
 			this.pnlTableau.removeAll();
 			this.pnlTableau.add(new JScrollPane(this.tblVilles), BorderLayout.CENTER);
+			this.pnlTableau.add(this.btModifier, BorderLayout.SOUTH);
 			this.pnlTableau.revalidate();
 			this.pnlTableau.repaint();
 		}
@@ -96,23 +97,83 @@ public class FrameVille extends JFrame implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		String action = e.getActionCommand();
-		if (action.equals("Confirmer"))
+        String action = e.getActionCommand();
+        if (action.equals("Confirmer"))
 		{
-			String nom = this.txtNom.getText();
-			int x = Integer.parseInt(this.txtAbscisse.getText());
-			int y = Integer.parseInt(this.txtOrdonnee.getText());
-			
-			if (!nom.isEmpty()) 
+            this.Confirmer();
+        }
+		else if (action.equals("Modifier"))
+		{
+            this.Modifier();
+        }
+    }
+
+    private void Confirmer()
+	{
+        String nom = this.txtNom.getText();
+        String abscisseText = this.txtAbscisse.getText();
+        String ordonneeText = this.txtOrdonnee.getText();
+
+        if (nom.isEmpty() || abscisseText.isEmpty() || ordonneeText.isEmpty())
+		{
+            JOptionPane.showMessageDialog(this, "Tous les champs doivent être complets", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try 
+		{
+            int x = Integer.parseInt(abscisseText);
+            int y = Integer.parseInt(ordonneeText);
+
+            Ville ville = Ville.creerVille(nom, x, y);
+            if (ville != null) {
+                this.tabVilles = Ville.getVilles();
+                updateTable();
+                this.controleur.rafraichirCarte();
+                dispose();
+            }
+        }
+		catch (NumberFormatException ex)
+		{
+            JOptionPane.showMessageDialog(this, "Les coordonnées doivent être des entiers", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+	private void Modifier()
+	{
+		int selectedRow = tblVilles.getSelectedRow();
+		if (selectedRow >= 0)
+		{
+			String nom = (String) tblVilles.getValueAt(selectedRow, 1);
+			String abscisseText = tblVilles.getValueAt(selectedRow, 2).toString();
+			String ordonneeText = tblVilles.getValueAt(selectedRow, 3).toString();
+	
+			if (nom.isEmpty() || abscisseText.isEmpty() || ordonneeText.isEmpty())
 			{
-				Ville ville = Ville.creerVille(nom, x, y);
-				if (ville != null) 
-				{
-					updateTable();
-					this.controleur.rafraichirCarte();
-					dispose();
-				}
+				JOptionPane.showMessageDialog(this, "Tous les champs doivent être complets", "Erreur", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+	
+			try
+			{
+				int x = Integer.parseInt(abscisseText);
+				int y = Integer.parseInt(ordonneeText);
+	
+				Ville ville = tabVilles.get(selectedRow);
+				ville.setNom(nom);
+				ville.setAbscisse(x);
+				ville.setOrdonnee(y);
+				updateTable();
+				this.controleur.rafraichirCarte();
+			}
+			catch (NumberFormatException ex)
+			{
+				JOptionPane.showMessageDialog(this, "Les coordonnées doivent être des entiers", "Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-	}
+		else
+		{
+			JOptionPane.showMessageDialog(this, "Sélectionnez une ville à modifier", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	}	
 }

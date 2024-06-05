@@ -11,7 +11,7 @@ public class FrameRoute extends JFrame implements ActionListener
 	private JLabel 			 lblTroncon, lblVilleDepart, lblVilleArrive;
 	private JTextField 		 txtTroncon;
 	private JComboBox<Ville> ddlstVilleDepart, ddlstVilleArrive;
-	private JButton 		 btConfirmer, btModifier;
+	private JButton 		 btConfirmer;
 	private JTable			 tblRoutes;
 	private String[]		 nomCol = {"Ville Dep", "Ville Arr", "nb Tronçon"};
 	private Object[][]	 	 data;
@@ -46,12 +46,8 @@ public class FrameRoute extends JFrame implements ActionListener
 
 		this.btConfirmer = new JButton("Confirmer");
 		this.btConfirmer.addActionListener(this);
-		
-		this.btModifier = new JButton("Modifier");
-		this.btModifier.addActionListener(this);
 
 		//PLACEMENT DES COMPOSANTS
-
 		this.pnlAjout.add(this.lblTroncon);
 		this.pnlAjout.add(this.txtTroncon);
 
@@ -64,7 +60,6 @@ public class FrameRoute extends JFrame implements ActionListener
 		this.updateTable();
 
 		this.pnlTableau.add(new JScrollPane(this.tblRoutes), BorderLayout.CENTER);
-		this.pnlTableau.add(this.btModifier, BorderLayout.SOUTH);
 
 		this.add(this.pnlTableau, BorderLayout.WEST);
 
@@ -99,23 +94,46 @@ public class FrameRoute extends JFrame implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		String action = e.getActionCommand();
-		if (action.equals("Confirmer"))
-		{
-			Ville villeDep = (Ville) this.ddlstVilleDepart.getSelectedItem();
-			Ville villeArr = (Ville) this.ddlstVilleArrive.getSelectedItem();
-			int nbTroncon = Integer.parseInt(this.txtTroncon.getText());
-			
-			if (villeDep != null && villeArr != null && villeDep != villeArr)
-			{
-				Route route = Route.ajouterRoute(nbTroncon, villeDep, villeArr);
-				if (route != null)
-				{
-					updateTable();
-					this.controleur.rafraichirCarte();
-					dispose();
-				}
-			}
-		}
+	    String action = e.getActionCommand();
+	    if (action.equals("Confirmer"))
+	    {
+	        Ville villeDep = (Ville) this.ddlstVilleDepart.getSelectedItem();
+	        Ville villeArr = (Ville) this.ddlstVilleArrive.getSelectedItem();
+	        String tronconText = this.txtTroncon.getText().trim();
+
+	        if (tronconText.isEmpty())
+	        {
+	            JOptionPane.showMessageDialog(this, "Veuillez saisir le nombre de tronçons", "Erreur", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
+			if (villeDep == null || villeArr == null)
+	        {
+	            JOptionPane.showMessageDialog(this, "Les Villes de départs et d'arrivées ne peuvent pas être nulles", "Erreur", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
+			if (villeArr == villeDep)
+	        {
+	            JOptionPane.showMessageDialog(this, "La ville de départ et la ville d'arrivée doivent être différentes", "Erreur", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
+	        try
+	        {
+	            int nbTroncon = Integer.parseInt(tronconText);
+	            Route route = Route.ajouterRoute(nbTroncon, villeDep, villeArr);
+	            if (route != null)
+	            {
+	                updateTable();
+	                this.controleur.rafraichirCarte();
+	                dispose();
+	            }
+	        }
+	        catch (NumberFormatException ex)
+	        {
+	            JOptionPane.showMessageDialog(this, "Veuillez saisir un nombre valide pour le nombre de tronçons", "Erreur", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
 	}
-}
+}	

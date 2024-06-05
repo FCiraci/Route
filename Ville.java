@@ -58,4 +58,6 @@ public class Ville
     public void setAbscisse(int x) { this.x = x; }
 
     public void setOrdonnee(int y) { this.y = y; }
+
+	public void setNom(String nom) { this.nom = nom;}
 }
