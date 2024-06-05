@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -6,6 +7,8 @@ import java.awt.event.MouseEvent;
 public class Controleur extends JFrame
 {
 	private JPanel panelCarte;
+	private Ville  selectedVille = null;
+    private int    offsetX, offsetY;
 
 	public Controleur()
 	{
@@ -62,6 +65,7 @@ public class Controleur extends JFrame
 			}
 		});
 
+
 		exporter.setBackground(Color.RED);
 		exporter.setForeground(Color.WHITE);
 		exporter.setPreferredSize(tailleBouton);
@@ -69,6 +73,17 @@ public class Controleur extends JFrame
 		importer.setBackground(Color.BLUE);
 		importer.setForeground(Color.WHITE);
 		importer.setPreferredSize(tailleBouton);
+
+		importer.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e)
+			{
+				JFileChooser ouvrirFichier = new JFileChooser("./Route");
+				FileNameExtensionFilter Filtre = new FileNameExtensionFilter(".data", ".data");
+				ouvrirFichier.setDialogTitle("Ouvrez votre carte");
+				ouvrirFichier.addChoosableFileFilter(Filtre);
+				ouvrirFichier.showOpenDialog(null);
+			}
+		});
 
 		boutons.setLayout(new FlowLayout());
 		boutons.add(ajtVille);
@@ -94,6 +109,44 @@ public class Controleur extends JFrame
 				dessinerVillesEtRoutes(g);
 			}
 		};
+
+		panelCarte.addMouseListener(new MouseAdapter()
+		{
+            public void mousePressed(MouseEvent e)
+			{
+                for (Ville ville : Ville.getVilles())
+				{
+                    int x = ville.getAbscisse();
+                    int y = ville.getOrdonnee();
+                    if (e.getX() >= x && e.getX() <= x + 50 && e.getY() >= y && e.getY() <= y + 50) 
+					{
+                        selectedVille = ville;
+                        offsetX = e.getX() - x;
+                        offsetY = e.getY() - y;
+                        break;
+                    }
+                }
+            }
+
+            public void mouseReleased(MouseEvent e)
+			{
+                selectedVille = null;
+            }
+        });
+
+		panelCarte.addMouseMotionListener(new MouseAdapter()
+		{
+            public void mouseDragged(MouseEvent e)
+			{
+                if (selectedVille != null)
+				{
+                    selectedVille.setAbscisse(e.getX() - offsetX);
+                    selectedVille.setOrdonnee(e.getY() - offsetY);
+                    rafraichirCarte();
+                }
+            }
+        });
+
 		return panelCarte;
 	}
 

@@ -55,4 +55,7 @@ public class Ville
 
 	public static List<Ville> getVilles() { return villes;}
 	
+    public void setAbscisse(int x) { this.x = x; }
+
+    public void setOrdonnee(int y) { this.y = y; }
 }
